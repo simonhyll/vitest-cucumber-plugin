@@ -17,10 +17,10 @@ import { gherkinLexerConfig } from './gherkin-lexer.js';
 
 const featureRegex = /\.feature$/;
 
-const compileFeatureToJS = async (config,featureSrc) => {
+const compileFeatureToJS = async (config, featurePath, featureSrc) => {
     const feature = await parse(featureSrc);
 
-    const code = await generateFeature(config,feature);
+    const code = await generateFeature(config, featurePath, feature);
 
     return code;
 }
@@ -82,7 +82,7 @@ export default function vitestCucumberPlugin(options = {}) {
         },
         transform : async (src,id) => {
             if (featureRegex.test(id)) {
-                const code = await compileFeatureToJS(config,src);
+                const code = await compileFeatureToJS(config, id, src);
 
                 log.debug(`transform ${id} -> ${code}`);
 
